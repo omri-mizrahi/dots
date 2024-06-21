@@ -62,29 +62,92 @@
         .param {
             margin: 5px 0;
         }
+        .param strong {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .copy-button {
+            background: none;
+            border: none;
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            position: relative;
+        }
+        .copy-button img {
+            width: 20px;
+            height: 20px;
+        }
+        .copy-button .tooltip {
+            visibility: hidden;
+            width: 50px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the icon */
+            left: 50%;
+            margin-left: -25px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .copy-button .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* Bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+        .copy-button:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
     <script>
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            // const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
             const paramsContainer = document.getElementById('params-container');
 
             if (urlParams.toString() || hashParams.toString()) {
                 paramsContainer.innerHTML = '<h2>Response:</h2>';
 
-                urlParams.forEach((value, key) => {
+                const appendParam = (key, value) => {
                     const paramElement = document.createElement('div');
                     paramElement.className = 'param';
-                    paramElement.innerHTML = `<strong>${key}:</strong> ${value}`;
+                    const keyElement = document.createElement('strong');
+                    keyElement.innerHTML = `${key}:`;
+                    paramElement.appendChild(keyElement);
+                    const valueElement = document.createTextNode(` ${value}`);
+                    paramElement.appendChild(valueElement);
+                    if (key === 'code') {
+                        const copyButton = document.createElement('button');
+                        copyButton.className = 'copy-button';
+                        copyButton.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb0e6jgH9MKFXVyOdjqtb-8Y2AGgtNybnD4g&s">`;
+                        const tooltip = document.createElement('span');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = 'Copy';
+                        copyButton.appendChild(tooltip);
+                        copyButton.onclick = () => {
+                            navigator.clipboard.writeText(value).then(() => {
+                                tooltip.textContent = 'Copied!';
+                                setTimeout(() => tooltip.textContent = 'Copy', 2000);
+                            });
+                        };
+                        keyElement.appendChild(copyButton);
+                    }
                     paramsContainer.appendChild(paramElement);
-                });
+                };
 
-                // hashParams.forEach((value, key) => {
-                //     const paramElement = document.createElement('div');
-                //     paramElement.className = 'param';
-                //     paramElement.innerHTML = `<strong>${key}:</strong> ${value}`;
-                //     paramsContainer.appendChild(paramElement);
-                // });
+                urlParams.forEach((value, key) => appendParam(key, value));
+                // hashParams.forEach((value, key) => appendParam(key, value));
             }
         }
     </script>
