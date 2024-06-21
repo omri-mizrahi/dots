@@ -1,1 +1,60 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Insights</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #fed97541, #fa7d1e46, #d6297749, #962fbf42, #4f5ad542);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #000;
+        }
+        .container h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(to right, #fcd058, #ff7913, #d62976, #962fbf, #4f5bd5);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #4f5bd5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our App</h1>
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management" class="button" id="button1">
+            Sign Up
+        </a>
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management" class="button" id="button2">
+            Login
+        </a>
+    </div>
+</body>
+</html>
