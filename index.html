@@ -115,7 +115,6 @@
         function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
-            hashParams.forEach((value,key) => console.log(value));
             const paramsContainer = document.getElementById('params-container');
 
             if (urlParams.toString() || hashParams.toString()) {
