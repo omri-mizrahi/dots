@@ -112,9 +112,10 @@
         }
     </style>
     <script>
-        window.onload = function() {
+        function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            hashParams.forEach((value,key) => console.log(value));
             const paramsContainer = document.getElementById('params-container');
 
             if (urlParams.toString() || hashParams.toString()) {
@@ -151,6 +152,9 @@
                 hashParams.forEach((value, key) => appendParam(key, value));
             }
         }
+
+        window.onload = updateParams;
+        window.addEventListener('hashchange', updateParams);
     </script>
 </head>
 <body>
