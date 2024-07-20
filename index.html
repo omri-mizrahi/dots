@@ -128,7 +128,7 @@
                     paramElement.appendChild(keyElement);
                     const valueElement = document.createTextNode(` ${value}`);
                     paramElement.appendChild(valueElement);
-                    if (key === 'code') {
+                    if (key in ('code', 'access_token', 'long_lived_token')) {
                         const copyButton = document.createElement('button');
                         copyButton.className = 'copy-button';
                         copyButton.innerHTML = `<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb0e6jgH9MKFXVyOdjqtb-8Y2AGgtNybnD4g&s">`;
@@ -148,7 +148,7 @@
                 };
 
                 urlParams.forEach((value, key) => appendParam(key, value));
-                // hashParams.forEach((value, key) => appendParam(key, value));
+                hashParams.forEach((value, key) => appendParam(key, value));
             }
         }
     </script>
