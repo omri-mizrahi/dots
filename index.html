@@ -23,6 +23,9 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .container h1 {
             font-size: 2em;
@@ -50,10 +53,11 @@
             background: #f9f9f9;
             border: 1px solid #ccc;
             padding: 10px;
-            margin-top: 20px;
+            margin-top: 5px;
             border-radius: 5px;
             font-size: 0.9em;
             max-width: 90vw;
+            width: 100%;
             word-wrap: break-word;
         }
         .params h2 {
@@ -110,6 +114,30 @@
             visibility: visible;
             opacity: 1;
         }
+        .facebook-button {
+            background-color: white;
+            color: #1877F2;
+            border: 1px solid #1877F2;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 15px;
+        }
+
+        .facebook-button img {
+            margin-right: 8px;
+            width: 24px;
+        }
+
+        .facebook-button:hover {
+            background-color: #F2F2F2;
+        }
     </style>
     <script>
         function updateParams() {
@@ -159,11 +187,13 @@
 <body>
     <div class="container">
         <h1>Welcome</h1>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="button" id="button1">
-            Sign Up
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button1">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+            Business Onboarding with Facebook
         </a>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="button" id="button2">
-            Login
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+            Login with Facebook
         </a>
         <div id="params-container" class="params"></div>
     </div>
