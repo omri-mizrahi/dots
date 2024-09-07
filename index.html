@@ -143,7 +143,7 @@
         function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
-            const paramsContainer = document.getElementById('params-container');
+            const paramsContainer = document.getElementById('response-container');
 
             if (urlParams.toString() || hashParams.toString()) {
                 paramsContainer.innerHTML = '<h2>Response:</h2>';
@@ -180,22 +180,53 @@
             }
         }
 
-        window.onload = updateParams;
-        window.addEventListener('hashchange', updateParams);
+        function serverSignup(redirectCode) {
+            fetch('http://52.146.14.118:5000/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ redirect_code: redirectCode })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the server response
+                document.getElementById('response-container').textContent = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('response-container').textContent = 'An error occurred.';
+            });
+        }
+
+        function redirectCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.toString()) {
+                urlParams.forEach((value, key) => {
+                    if (key === 'code') {
+                        document.getElementById('response-container').textContent = 'Signing you up...'
+                        serverSignup(value);
+                    }
+                });
+            }
+        }
+
+        window.onload = redirectCallback;
+        window.addEventListener('hashchange', redirectCallback);
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Welcome</h1>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button1">
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button1">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
             Business Onboarding with Facebook
         </a>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=token&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button2">
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button2">
             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
             Login with Facebook
         </a>
-        <div id="params-container" class="params"></div>
+        <div id="response-container" class="params"></div>
     </div>
 </body>
 </html>
