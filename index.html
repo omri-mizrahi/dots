@@ -263,18 +263,17 @@
         }
 
         function confirmEmail() {
-          let updatedEmail = document.getElementById('email-update').value;
+          const updatedEmail = document.getElementById('email-update').value;
           const reenteredEmail = document.getElementById('email-reenter').value;
 
-          // Check if both email inputs match
-          if (!!updatedEmail && updatedEmail !== reenteredEmail) {
-            alert('Emails do not match. Please enter the same email in both fields.');
-            return;
+          if (!updatedEmail || !reenteredEmail) {
+            return
           }
 
-          // If the user hasn't provided a new email, use the displayed email
-          if (!updatedEmail) {
-            updatedEmail = document.getElementById('current-email').textContent;
+          // Check if both email inputs match
+          if (updatedEmail !== reenteredEmail) {
+            alert('Emails do not match. Please enter the same email in both fields.');
+            return;
           }
 
           // Send updated email to backend
