@@ -166,15 +166,29 @@
         .facebook-button:hover {
             background-color: #F2F2F2;
         }
-
-
-
-
+        .icon-btn {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 5px;
+          border: none;
+          cursor: pointer;
+          border-radius: 5px;
+        }
+        .btn-accept {
+          background-color: green;
+          color: white;
+        }
+        .btn-reject {
+          background-color: red;
+          color: white;
+        }
 
     </style>
     <script>
         let server = 'https://instaguru.social'
-        //server = 'http://127.0.0.1:5000'  //debug
+        server = 'http://127.0.0.1:5000'  //debug
+
+        let userId = ''
 
         function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -217,19 +231,35 @@
         }
 
         function serverSignup(redirectCode) {
-            axios.post(`${server}/signup`, { redirect_code: redirectCode }, { withCredentials: true })
+            axios.post(`${server}/signup`, { redirect_code: redirectCode })
             .then(response => {
                 const email = response.data.email;
+                userId = response.data.user_id;
 
                   // Show the current email and prompt the user to confirm or update it
                   document.getElementById('current-email').textContent = `${email}`;
-                  document.getElementById('buttons').style.display = 'none'; // Hide auth code step
-                  document.getElementById('confirm-email').style.display = 'block'; // Show email confirmation step
+                  document.getElementById('buttons').style.display = 'none';
+                  document.getElementById('confirm-email').style.display = 'block';
+                  document.getElementById('confirm-email-question').style.display = 'block';
             })
             .catch(error => {
                 console.error('Error on sign up first request:', error);
                 document.getElementById('response-container').textContent = 'An error occurred.';
             });
+        }
+
+        function needToUpdateEmail() {
+            document.getElementById('confirm-email-question').style.display = 'none';
+            document.getElementById('confirm-email-input').style.display = 'block';
+        }
+
+        function finishConfirmEmail() {
+            document.getElementById('response-container').innerHTML = `
+                  Successfully signed up<br>
+                  Save the link to: <a href="https://lookerstudio.google.com/reporting/c8b7c75b-d125-4f6a-8be7-f458676640c9" class="button"> Your analysis</a><br>
+                  Please notice that the system gathers information at the end of each day, so you'll be able to see your data starting from tomorrow.
+              `;
+            document.getElementById('confirm-email').style.display = 'none';
         }
 
         function confirmEmail() {
@@ -248,14 +278,9 @@
           }
 
           // Send updated email to backend
-          axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail }, { withCredentials: true })
+          axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail, user_id: userId })
             .then(response => {
-              document.getElementById('response-container').innerHTML = `
-                  ${response.data.message}<br>
-                  Save the link to: <a href="https://lookerstudio.google.com/reporting/c8b7c75b-d125-4f6a-8be7-f458676640c9" class="button"> Your analysis</a><br>
-                  Please notice that the system gathers information at the end of each day, so you'll be able to see your data starting from tomorrow.
-              `;
-              document.getElementById('confirm-email').style.display = 'none';
+              finishConfirmEmail();
             })
             .catch(error => {
               console.error('Error confirming email:', error);
@@ -282,6 +307,9 @@
 
 
 
+
+
+
     </script>
 </head>
 <body>
@@ -303,12 +331,19 @@
     </div>
     <div id="confirm-email" style="display: none;">
         <h2>Confirm your Email</h2>
-        <p id="current-email"></p>
-        <label for="email-update">Update Email (if necessary):</label>
-        <input type="email" id="email-update" placeholder="Enter new email">
-        <label for="email-reenter">Re-enter Email:</label>
-        <input type="email" id="email-reenter" placeholder="Re-enter new email"><br><br>
-        <button class="button" onclick="confirmEmail()">Confirm</button>
+        <div id="confirm-email-question">
+            <label>Is this your email?</label>
+            <p id="current-email"></p>
+            <button class="icon-btn btn-accept" onclick="finishConfirmEmail()">&#10004;</button> <!-- V (checkmark) icon -->
+            <button class="icon-btn btn-reject" onclick="needToUpdateEmail()">&#10006;</button>  <!-- X (cross) icon -->
+        </div>
+        <div id="confirm-email-input" style="display: none;">
+            <label for="email-update">Updated Email:</label>
+            <input type="email" id="email-update" placeholder="Enter new email">
+            <label for="email-reenter">Re-enter Email:</label>
+            <input type="email" id="email-reenter" placeholder="Re-enter new email"><br><br>
+            <button class="button" onclick="confirmEmail()">Confirm</button>
+        </div>
     </div>
     <div id="response-container" class="params"></div>
 </div>
