@@ -266,7 +266,7 @@
           const updatedEmail = document.getElementById('email-update').value;
           const reenteredEmail = document.getElementById('email-reenter').value;
 
-          if (!updatedEmail || !reenteredEmail) {
+          if (!updatedEmail && !reenteredEmail) {
             return
           }
 
