@@ -276,6 +276,7 @@
             return;
           }
 
+          document.getElementById('response-container').textContent = 'Updating email...'
           // Send updated email to backend
           axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail, user_id: userId })
             .then(response => {
