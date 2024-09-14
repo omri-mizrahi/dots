@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Media Insights</title>
     <link rel="icon" href="logo.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -30,6 +31,33 @@
         .container h1 {
             font-size: 2em;
             margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        #confirm-email {
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 8px;
+          width: 400px;
+          margin: auto;
+        }
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+
+        input[type="email"] {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
         }
         .button {
             display: inline-block;
@@ -138,8 +166,16 @@
         .facebook-button:hover {
             background-color: #F2F2F2;
         }
+
+
+
+
+
     </style>
     <script>
+        let server = 'https://instaguru.social'
+        server = 'http://127.0.0.1:5000'
+
         function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -181,21 +217,49 @@
         }
 
         function serverSignup(redirectCode) {
-            fetch('https://instaguru.social/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ redirect_code: redirectCode })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display the server response
-                document.getElementById('response-container').textContent = data.message;
+            axios.post(`${server}/signup`, { redirect_code: redirectCode }, { withCredentials: true })
+            .then(response => {
+                const email = response.data.email;
+
+                  // Show the current email and prompt the user to confirm or update it
+                  document.getElementById('current-email').textContent = `${email}`;
+                  document.getElementById('buttons').style.display = 'none'; // Hide auth code step
+                  document.getElementById('confirm-email').style.display = 'block'; // Show email confirmation step
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error on sign up first request:', error);
                 document.getElementById('response-container').textContent = 'An error occurred.';
+            });
+        }
+
+        function confirmEmail() {
+          let updatedEmail = document.getElementById('email-update').value;
+          const reenteredEmail = document.getElementById('email-reenter').value;
+
+          // Check if both email inputs match
+          if (!!updatedEmail && updatedEmail !== reenteredEmail) {
+            alert('Emails do not match. Please enter the same email in both fields.');
+            return;
+          }
+
+          // If the user hasn't provided a new email, use the displayed email
+          if (!updatedEmail) {
+            updatedEmail = document.getElementById('current-email').textContent;
+          }
+
+          // Send updated email to backend
+          axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail }, { withCredentials: true })
+            .then(response => {
+              document.getElementById('response-container').innerHTML = `
+                  ${response.data.message}<br>
+                  Save the link to: <a href="https://lookerstudio.google.com/reporting/c8b7c75b-d125-4f6a-8be7-f458676640c9" class="button"> Your analysis</a><br>
+                  Please notice that the system gathers information at the end of each day, so you'll be able to see your data starting from tomorrow.
+              `;
+              document.getElementById('confirm-email').style.display = 'none';
+            })
+            .catch(error => {
+              console.error('Error confirming email:', error);
+              document.getElementById('response-container').textContent = 'An error occurred.';
             });
         }
 
@@ -213,20 +277,40 @@
 
         window.onload = redirectCallback;
         window.addEventListener('hashchange', redirectCallback);
+
+
+
+
+
     </script>
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <div class="buttons" id="buttons">
         <h1>Welcome</h1>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button1">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&display=page&extras={%22setup%22:{%22channel%22:%22IG_API_ONBOARDING%22}}&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email"
+           class="facebook-button" id="button1">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                 alt="Facebook Logo">
             Business Onboarding with Facebook
         </a>
-        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email" class="facebook-button" id="button2">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+        <a href="https://www.facebook.com/v20.0/dialog/oauth?client_id=1879943762443780&redirect_uri=https://omri-mizrahi.github.io/social-media-insights&response_type=code&scope=instagram_basic,pages_show_list,pages_read_engagement,instagram_manage_insights,business_management,email"
+           class="facebook-button" id="button2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
+                 alt="Facebook Logo">
             Login with Facebook
         </a>
-        <div id="response-container" class="params"></div>
     </div>
+    <div id="confirm-email" style="display: none;">
+        <h2>Confirm your Email</h2>
+        <p id="current-email"></p>
+        <label for="email-update">Update Email (if necessary):</label>
+        <input type="email" id="email-update" placeholder="Enter new email">
+        <label for="email-reenter">Re-enter Email:</label>
+        <input type="email" id="email-reenter" placeholder="Re-enter new email"><br><br>
+        <button class="button" onclick="confirmEmail()">Confirm</button>
+    </div>
+    <div id="response-container" class="params"></div>
+</div>
 </body>
 </html>
