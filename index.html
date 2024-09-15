@@ -293,6 +293,7 @@
             if (urlParams.toString()) {
                 urlParams.forEach((value, key) => {
                     if (key === 'code') {
+                        document.getElementById('buttons').style.display = 'none';
                         document.getElementById('response-container').textContent = 'Signing you up...'
                         serverSignup(value);
                     }
