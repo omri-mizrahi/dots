@@ -191,7 +191,7 @@
         let server = 'https://instaguru.social'
         //server = 'http://127.0.0.1:5000'  //debug
 
-        let userId = ''
+        let fbUserId = ''
 
         function updateParams() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -237,7 +237,7 @@
             axios.post(`${server}/signup`, { redirect_code: redirectCode })
             .then(response => {
                 const email = response.data.email;
-                userId = response.data.user_id;
+                fbUserId = response.data.fb_user_id;
 
                   // Show the current email and prompt the user to confirm or update it
                   document.getElementById('current-email').textContent = `${email}`;
@@ -281,7 +281,7 @@
 
           document.getElementById('response-container').textContent = 'Updating email...'
           // Send updated email to backend
-          axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail, user_id: userId })
+          axios.post(`${server}/confirm-email`, { confirmed_email: updatedEmail, fb_user_id: fbUserId })
             .then(response => {
               finishConfirmEmail();
             })
@@ -302,7 +302,6 @@
                     }
                 });
             }
-            axios.get(`${server}/dbping`) // db ping
         }
 
         window.onload = redirectCallback;
