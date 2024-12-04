@@ -280,8 +280,8 @@
         }
 
         function confirmEmail() {
-          const updatedEmail = document.getElementById('email-update').value;
-          const reenteredEmail = document.getElementById('email-reenter').value;
+          const updatedEmail = document.getElementById('email-update').value.trim();
+          const reenteredEmail = document.getElementById('email-reenter').value.trim();
 
           if (!updatedEmail && !reenteredEmail) {
             return
