@@ -187,6 +187,7 @@
         }
 
 
+
     </style>
     <script>
         let server = 'https://instaguru.social'
@@ -253,16 +254,21 @@
                 }
             })
             .catch(error => {
-                console.error('Error on sign up first request:', error);
-                let displayError;
-                const errorMessage = error.response.data.message
-                if (!!errorMessage) {
-                    displayError = `Server Error: ${errorMessage}`;
-                } else {
-                    displayError = 'Server Error';
-                }
-                document.getElementById('response-container').textContent = displayError;
+                console.error('Error on sign up request:', error);
+                handleServerError(error);
             });
+        }
+
+        function handleServerError(error) {
+            let displayError;
+            const errorMessage = error.response.data.message
+            if (!!errorMessage) {
+                displayError = `Server Error: ${errorMessage}`;
+            } else {
+                displayError = 'Server Error';
+            }
+            document.getElementById('response-container').textContent = displayError;
+            document.getElementById('try-again-button').style.display = 'block';
         }
 
         function needToUpdateEmail() {
@@ -301,7 +307,7 @@
             })
             .catch(error => {
               console.error('Error confirming email:', error);
-              document.getElementById('response-container').textContent = `Server Error: ${error}`;
+              handleServerError(error);
             });
         }
 
@@ -321,6 +327,7 @@
 
         window.onload = redirectCallback;
         window.addEventListener('hashchange', redirectCallback);
+
 
 
 
@@ -373,6 +380,7 @@
         </div>
     </div>
     <div id="response-container" class="params"></div>
+    <a id="try-again-button" href="/social-media-insights" class="button" style="display: none;">Try Again</a>
 </div>
 </body>
 </html>
