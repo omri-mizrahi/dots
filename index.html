@@ -186,6 +186,7 @@
           color: white;
         }
 
+
     </style>
     <script>
         let server = 'https://instaguru.social'
@@ -239,15 +240,28 @@
                 const email = response.data.email;
                 fbUserId = response.data.fb_user_id;
 
+                document.getElementById('buttons').style.display = 'none';
+                document.getElementById('confirm-email').style.display = 'block';
+
+                if (!email) {
+                    needToUpdateEmail();
+                }
+                else {
                   // Show the current email and prompt the user to confirm or update it
                   document.getElementById('current-email').textContent = `${email}`;
-                  document.getElementById('buttons').style.display = 'none';
-                  document.getElementById('confirm-email').style.display = 'block';
                   document.getElementById('confirm-email-question').style.display = 'block';
+                }
             })
             .catch(error => {
                 console.error('Error on sign up first request:', error);
-                document.getElementById('response-container').textContent = `Server Error: ${error}`;
+                let displayError;
+                const errorMessage = error.response.data.message
+                if (!!errorMessage) {
+                    displayError = `Server Error: ${errorMessage}`;
+                } else {
+                    displayError = 'Server Error';
+                }
+                document.getElementById('response-container').textContent = displayError;
             });
         }
 
@@ -315,11 +329,14 @@
 
 
 
+
     </script>
 </head>
 <body>
 <div style="position: absolute; top: 20px; left: 20px;">
-    <a href="/social-media-insights/privacy-policy" class="button" style="padding: 10px 15px; font-size: 14px; text-decoration: none; border-radius: 5px; background-color: #4f5bd5; color: #fff;">Privacy Policy</a>
+    <a href="/social-media-insights/privacy-policy" class="button"
+       style="padding: 10px 15px; font-size: 14px; text-decoration: none; border-radius: 5px; background-color: #4f5bd5; color: #fff;">Privacy
+        Policy</a>
 </div>
 <div class="container">
     <img src="full-logo.png" alt="Logo" style="max-width: 100%; height: auto;">
@@ -343,7 +360,8 @@
         <div id="confirm-email-question">
             <label>Is this your updated email?</label>
             <p id="current-email"></p>
-            <button class="icon-btn btn-accept" onclick="finishConfirmEmail()">&#10004;</button> <!-- V (checkmark) icon -->
+            <button class="icon-btn btn-accept" onclick="finishConfirmEmail()">&#10004;</button>
+            <!-- V (checkmark) icon -->
             <button class="icon-btn btn-reject" onclick="needToUpdateEmail()">&#10006;</button>  <!-- X (cross) icon -->
         </div>
         <div id="confirm-email-input" style="display: none;">
